@@ -2,20 +2,18 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-
 public class PillarScaler : MonoBehaviour
 {
-    public float maxHeight = 10f;
     public float scaleDownTo = 0.01f;
-    public float animationDuration = 0.5f;
+    private const float animationDuration = 2.0f; // Constant animation duration in seconds
 
     private Vector3 originalScale;
-    private GameObject[] allPillars;
+
+    // Remove the public maxHeight property
 
     void Start()
     {
         originalScale = transform.localScale;
-        allPillars = GameObject.FindGameObjectsWithTag("Pillar");
     }
 
     void Update()
@@ -36,10 +34,14 @@ public class PillarScaler : MonoBehaviour
 
     void ScalePillarByName(string pillarName)
     {
+        GameObject[] allPillars = GameObject.FindGameObjectsWithTag("Pillar");
+
         foreach (GameObject pillar in allPillars)
         {
             if (pillar.name == pillarName)
             {
+                // Read the individual maxHeight from the GameObject's Inspector
+                float maxHeight = pillar.GetComponent<PillarHeight>().maxHeight;
                 StartCoroutine(ScaleToHeight(pillar, maxHeight));
             }
             else
@@ -51,8 +53,12 @@ public class PillarScaler : MonoBehaviour
 
     void ScaleAllPillars()
     {
+        GameObject[] allPillars = GameObject.FindGameObjectsWithTag("Pillar");
+
         foreach (GameObject pillar in allPillars)
         {
+            // Read the individual maxHeight from the GameObject's Inspector
+            float maxHeight = pillar.GetComponent<PillarHeight>().maxHeight;
             StartCoroutine(ScaleToHeight(pillar, maxHeight));
         }
     }
